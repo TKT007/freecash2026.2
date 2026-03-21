@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Gravy Pass - Download App</title>
+
+    <style>
+        /* ==================================== */
+        /* ===== COLORS & VARIABLES (GRAVY PASS: LIGHT CYAN) ===== */
+        /* ==================================== */
+        :root {
+            --bg: #eafaff;
+            --text: #0a1a22;
+            --muted: #4a7080;
+            --brand: #00bcd8;
+            --brand2: #0aa8cc;
+            --brand3: #0090b0;
+            --accent-red: #e03045;
+            --bg-card: #ffffff;
+            --border: #c2eef8;
+            --brand-glow: rgba(93, 226, 253, 0.35);
+        }
+
+        * { box-sizing: border-box; }
+        html, body { margin: 0; height: 100%; }
+        body {
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            line-height: 1.5;
+            font-weight: 400;
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(ellipse at 10% 80%, rgba(93,226,253,.45) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 10%, rgba(93,226,253,.3) 0%, transparent 50%),
+                linear-gradient(160deg, #d6f7ff 0%, #eafaff 50%, #c8f2ff 100%);
+            position: relative;
+        }
+
+        /* Animated background orbs */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: .25;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .orb1 {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(93,226,253,.6), transparent);
+            top: -150px; left: -120px;
+            animation: float1 22s ease-in-out infinite;
+        }
+        .orb2 {
+            width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(44,200,232,.5), transparent);
+            bottom: -80px; right: -60px;
+            animation: float2 17s ease-in-out infinite;
+        }
+        .orb3 {
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(93,226,253,.4), transparent);
+            top: 50%; right: 10%;
+            animation: float2 25s ease-in-out infinite reverse;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            50% { transform: translate(60px, 60px) scale(1.1); }
+        }
+        @keyframes float2 {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            50% { transform: translate(-40px, -50px) scale(1.15); }
+        }
+
+        /* Layout Container */
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 60px 20px 48px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Logo */
+        .logo-container {
+            width: 90px;
+            height: 90px;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(93,226,253,.1);
+            border: 2px solid rgba(93,226,253,.3);
+            box-shadow: 0 10px 40px rgba(93,226,253,.35);
+            transition: transform 0.3s ease;
+            margin: 0 auto 30px;
+        }
+        .logo-container:hover { transform: scale(1.05); }
+        .logo {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 24px;
+        }
+
+        /* Section */
+        .section {
+            animation: fadeIn 0.55s cubic-bezier(.22,.68,0,1.2) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* You're In Header */
+        .youre-in-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin: 30px 0 18px;
+        }
+        .check-circle {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--brand), var(--brand3));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 0 24px var(--brand-glow), 0 0 60px rgba(93,226,253,.2);
+        }
+        .check-circle svg {
+            width: 32px;
+            height: 32px;
+            color: #fff;
+        }
+        .youre-in-text {
+            font-size: 52px;
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(90deg, var(--text) 30%, var(--brand));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .text-cyan { color: var(--brand); }
+
+        /* Main Title */
+        .main-title {
+            font-size: 46px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin: 20px 0 16px;
+            background: linear-gradient(90deg, var(--text), var(--brand));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 30px;
+            padding: 0 8px;
+        }
+
+        /* Main CTA Button */
+        .cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            background: linear-gradient(135deg, var(--brand), var(--brand3));
+            color: #fff !important;
+            font-weight: 800;
+            font-size: 17px;
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            border: 0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 30px;
+            margin-bottom: 40px;
+            text-decoration: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px var(--brand-glow), 0 2px 0 rgba(255,255,255,.1) inset;
+            transition: all 0.3s ease;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        .cta-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent);
+            transition: left 0.5s;
+        }
+        .cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 45px rgba(93,226,253,.45);
+        }
+        .cta:hover::before { left: 100%; }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 10px 30px var(--brand-glow); }
+            50% { box-shadow: 0 15px 45px rgba(93,226,253,.5); }
+        }
+
+        /* Card */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            text-align: left;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 24px rgba(0,180,220,.12), 0 1px 4px rgba(0,0,0,.06);
+            position: relative;
+            padding: 0;
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 800;
+            text-align: center;
+            margin: 0;
+            padding: 22px 0;
+            color: var(--muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .li {
+            display: flex;
+            gap: 16px;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            align-items: flex-start;
+            text-align: left;
+            background: transparent;
+        }
+        .li:first-of-type { border-top: 1px solid var(--border); }
+        .li:last-child { border-bottom: 0; }
+
+        .check {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--brand), var(--brand3));
+            font-size: 13px;
+            font-weight: 800;
+            color: #fff;
+            flex-shrink: 0;
+            box-shadow: 0 0 12px var(--brand-glow);
+        }
+        .li b {
+            display: block;
+            color: var(--text);
+            font-size: 15px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .muted-text {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        /* Footer */
+        .foot {
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+            margin-top: 20px;
+            opacity: .6;
+        }
+
+        /* Activation Notice */
+        .activation-notice {
+            background: linear-gradient(135deg, #fff0f1 0%, #fff5f5 100%);
+            border: 1.5px solid var(--accent-red);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 24px;
+            text-align: left;
+            box-shadow: 0 0 30px rgba(255,71,87,.2);
+            animation: glow-border 2.5s ease-in-out infinite;
+            position: relative;
+        }
+        .activation-notice::before {
+            content: '⚠️ IMPORTANT';
+            position: absolute;
+            top: -1px; right: 20px;
+            background: var(--accent-red);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 800;
+            font-family: 'Syne', sans-serif;
+            padding: 4px 12px;
+            border-radius: 0 0 8px 8px;
+            letter-spacing: .5px;
+        }
+
+        @keyframes glow-border {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,71,87,.2); border-color: var(--accent-red); }
+            50% { box-shadow: 0 0 35px rgba(255,71,87,.4); border-color: #ff6b7a; }
+        }
+
+        .activation-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .lock-icon { font-size: 20px; line-height: 1; flex-shrink: 0; }
+        .activation-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            flex: 1;
+        }
+        .activation-text {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.5;
+            margin: 0;
+        }
+        .highlight-cyan {
+            color: var(--brand);
+            font-weight: 700;
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 48px 16px 32px; }
+            .youre-in-text { font-size: 42px; }
+            .li { padding-left: 16px; padding-right: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-orb orb1"></div>
+    <div class="bg-orb orb2"></div>
+    <div class="bg-orb orb3"></div>
+
+    <div class="container">
+        <section class="section" id="mainStep">
+            <!-- Main Title -->
+            <h1 class="main-title">Get Paid for Testing Apps &amp; Games</h1>
+
+            <!-- Subtitle -->
+            <p class="subtitle">
+                Join thousands earning real cash rewards daily — no experience needed.
+            </p>
+
+            <!-- CTA -->
+            <a id="cta" class="cta" href="https://go.unlockbonusapp.com/click">
+                <svg class="cta-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                </svg>
+                Start Earning Now
+            </a>
+
+            <!-- Card: Earning Journey Steps -->
+            <div class="card">
+                <div class="section-title">Your Earning Journey</div>
+                <div class="li">
+                    <span class="check">1</span>
+                    <div>
+                        <b>Add Gravy Pass to Your Wallet</b>
+                        <div class="muted-text">Apple Wallet (iOS) or Google Wallet (Android) • No app needed</div>
+                    </div>
+                </div>
+                <div class="li">
+                    <span class="check">2</span>
+                    <div>
+                        <b>Complete Starter Offers</b>
+                        <div class="muted-text">Play games or try apps to earn instant cash rewards (Roblox, Fortnite, 8 Ball)</div>
+                    </div>
+                </div>
+                <div class="li" style="border-bottom: none;">
+                    <span class="check">3</span>
+                    <div>
+                        <b>Get Paid Instantly</b>
+                        <div class="muted-text">Earnings go straight to your Apple or Google Wallet • No waiting</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activation Notice -->
+            <div class="activation-notice">
+                <div class="activation-header">
+                    <span class="lock-icon">🔓</span>
+                    <span class="activation-title">Activation Required</span>
+                </div>
+                <p class="activation-text">
+                    New users: Complete <span class="highlight-cyan">2 quick offers</span> to unlock full access and start earning.
+                </p>
+            </div>
+
+            <!-- Footer -->
+            <div class="foot">Trusted by over 500,000 users earning money daily</div>
+        </section>
+    </div>
+</body>
+</html>

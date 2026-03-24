@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Freecash – Scroll FYP Offer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #00D26A;
+      --green-border: rgba(0,210,106,0.2);
+      --zinc-950: #09090b;
+      --zinc-800: #27272a;
+      --zinc-700: #3f3f46;
+      --zinc-500: #71717a;
+      --zinc-400: #a1a1aa;
+      --zinc-300: #d4d4d8;
+      --amber: #f59e0b;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--zinc-950);
+      color: #fff;
+      font-family: system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .bg-base {
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, rgba(0,210,106,0.06) 0%, transparent 65%),
+                  linear-gradient(135deg, var(--zinc-950) 0%, #111116 50%, var(--zinc-950) 100%);
+      z-index: 0;
+    }
+
+    .screen {
+      position: relative; z-index: 1;
+      min-height: 100dvh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 32px 16px;
+    }
+    .screen.hidden { display: none; }
+
+    .card {
+      width: 100%; max-width: 440px;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 20px;
+      text-align: center;
+    }
+
+    /* LOGO */
+    .logo {
+      width: 80px; height: 80px; border-radius: 20px; overflow: hidden;
+      box-shadow: 0 0 40px rgba(0,210,106,0.2);
+      animation: fadeUp 0.5s ease both;
+    }
+    .logo img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* BADGE */
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid var(--green-border);
+      background: linear-gradient(90deg, rgba(0,80,40,0.3), rgba(24,24,27,0.5));
+      padding: 8px 20px; border-radius: 999px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--green);
+      animation: fadeUp 0.5s 0.05s ease both;
+    }
+    .pulse-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green); animation: pulse 1.5s infinite; flex-shrink: 0;
+    }
+
+    /* HEADINGS */
+    .hero-h1 {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(52px, 14vw, 80px);
+      line-height: 0.95; text-transform: uppercase; color: #fff;
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+    .hero-h1-sm {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(36px, 9vw, 56px);
+      line-height: 1; text-transform: uppercase; color: #fff;
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+    .accent { color: var(--green); }
+
+    .subtitle {
+      font-size: 16px; color: var(--zinc-400);
+      animation: fadeUp 0.5s 0.15s ease both;
+    }
+
+    /* INFO BOX */
+    .info-box {
+      width: 100%;
+      border: 1px solid var(--green-border);
+      background: linear-gradient(180deg, rgba(0,60,30,0.2) 0%, rgba(24,24,27,0.5) 100%);
+      border-radius: 20px; padding: 20px; text-align: left;
+      animation: fadeUp 0.5s 0.2s ease both;
+    }
+    .info-box-label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 14px;
+    }
+    .info-box-label .pulse-dot { width: 10px; height: 10px; }
+    .rules { display: flex; flex-direction: column; gap: 14px; }
+    .rule { display: flex; align-items: flex-start; gap: 12px; }
+    .rule-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      border-radius: 10px; background: rgba(0,210,106,0.1);
+      display: flex; align-items: center; justify-content: center; margin-top: 2px;
+    }
+    .rule-icon svg { width: 18px; height: 18px; stroke: var(--green); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .rule-text { font-size: 14px; color: var(--zinc-300); line-height: 1.5; }
+    .rule-text strong { color: #fff; }
+
+    /* REMINDER BOX */
+    .reminder-box {
+      width: 100%;
+      border: 1px solid var(--zinc-800); background: rgba(24,24,27,0.5);
+      border-radius: 20px; padding: 18px 20px;
+      animation: fadeUp 0.5s 0.2s ease both;
+    }
+    .reminder-label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--amber); margin-bottom: 10px;
+    }
+    .pulse-amber { width: 10px; height: 10px; border-radius: 50%; background: var(--amber); animation: pulse 1.5s infinite; }
+    .reminder-text { font-size: 14px; color: var(--zinc-300); line-height: 1.5; text-align: center; }
+    .reminder-text strong { color: #fff; }
+
+    /* BUTTONS */
+    .btn-group {
+      width: 100%; display: flex; flex-direction: column; gap: 10px;
+      animation: fadeUp 0.5s 0.25s ease both;
+    }
+
+    /* YES button — original green */
+    .btn-yes {
+      width: 100%; padding: 18px;
+      border-radius: 18px; border: none;
+      background: linear-gradient(90deg, #00D26A, #00e87a);
+      color: #000;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 16px; font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 24px rgba(0,210,106,0.3);
+      position: relative; overflow: hidden;
+      transition: filter 0.2s;
+    }
+    .btn-yes:hover { filter: brightness(1.07); }
+
+    /* SIGNUP / CTA Apple-style */
+    .btn-signup {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 17px 24px;
+      border-radius: 18px; border: none;
+      background: var(--green);
+      color: #000;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 17px; font-weight: 700; letter-spacing: 0.02em;
+      cursor: pointer; text-decoration: none; text-align: center;
+      box-shadow: 0 0 28px rgba(0,210,106,0.45), 0 4px 16px rgba(0,0,0,0.3);
+      position: relative; overflow: hidden;
+      transition: filter 0.2s;
+      animation: fadeUp 0.5s 0.25s ease both;
+    }
+    .btn-signup:hover { filter: brightness(1.08); }
+    .btn-signup:active { transform: scale(0.98); }
+    .cta-icon { width: 22px; height: 22px; flex-shrink: 0; }
+
+    /* Click animation: squeeze → bounce → settle */
+    .btn-yes.pressing {
+      animation: btnBounce 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+    }
+    @keyframes btnBounce {
+      0%   { transform: scale(1); }
+      18%  { transform: scale(0.94); }
+      50%  { transform: scale(1.04); }
+      75%  { transform: scale(0.98); }
+      100% { transform: scale(1); }
+    }
+
+    /* Ripple */
+    .ripple {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      transform: scale(0);
+      animation: rippleOut 0.5s ease-out forwards;
+      pointer-events: none;
+    }
+    @keyframes rippleOut {
+      to { transform: scale(4.5); opacity: 0; }
+    }
+
+    /* NO button */
+    .btn-no {
+      width: 100%; padding: 18px;
+      border-radius: 18px; border: 1px solid var(--zinc-700);
+      background: rgba(24,24,27,0.8); color: var(--zinc-400);
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 16px; font-weight: 600;
+      cursor: pointer; transition: transform 0.12s, background 0.2s;
+    }
+    .btn-no:hover { background: var(--zinc-800); }
+    .btn-no:active { transform: scale(0.97); }
+
+
+
+    /* BACK */
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 20px; border-radius: 14px;
+      border: 1px solid var(--zinc-700); background: rgba(39,39,42,0.5);
+      color: var(--zinc-300);
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 15px; font-weight: 500;
+      cursor: pointer; transition: background 0.2s, transform 0.1s;
+    }
+    .btn-back:hover { background: var(--zinc-800); }
+    .btn-back:active { transform: scale(0.98); }
+    .btn-back svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* FOOTER */
+    .trust { font-size: 13px; color: var(--zinc-500); animation: fadeUp 0.5s 0.3s ease both; }
+    .disclaimer { font-size: 11px; color: var(--zinc-700); animation: fadeUp 0.5s 0.3s ease both; }
+
+    /* BLOCKED */
+    .blocked-icon {
+      width: 72px; height: 72px; border-radius: 50%; background: var(--zinc-800);
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+    }
+    .blocked-icon svg { width: 36px; height: 36px; stroke: var(--zinc-400); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .blocked-title { font-family: 'Anton', sans-serif; font-size: 28px; letter-spacing: 0.02em; text-transform: uppercase; color: #fff; margin-bottom: 8px; }
+    .blocked-sub { font-size: 15px; color: var(--zinc-400); margin-bottom: 28px; }
+
+    /* KEYFRAMES */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    @media (min-width: 480px) {
+      .hero-h1 { font-size: 88px; }
+      .info-box, .reminder-box { padding: 24px; }
+      .rule-text, .reminder-text { font-size: 15px; }
+      .subtitle { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-base"></div>
+
+<!-- SCREEN 1: Age Gate -->
+<div class="screen" id="screen-age">
+  <div class="card">
+    <div class="logo">
+      <img src="https://i.imgur.com/d4rEH4U.png" alt="Freecash">
+    </div>
+    <div class="badge"><span class="pulse-dot"></span>Scroll the FYP Offer</div>
+    <h1 class="hero-h1">ARE YOU <span class="accent">21+</span> ?</h1>
+    <p class="subtitle">Turn your scroll time into money.</p>
+    <div class="info-box">
+      <div class="info-box-label"><span class="pulse-dot"></span>Important, Please Read</div>
+      <div class="rules">
+        <div class="rule">
+          <div class="rule-icon"><svg viewBox="0 0 24 24"><path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/></svg></div>
+          <p class="rule-text">Your age <strong>must be 21+</strong> at sign up to unlock the Scroll FYP offer</p>
+        </div>
+        <div class="rule">
+          <div class="rule-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg></div>
+          <p class="rule-text">Already have the app? <strong>Create a new account</strong> through this page, old accounts don't qualify</p>
+        </div>
+      </div>
+    </div>
+    <div class="btn-group">
+      <button class="btn-yes" onclick="handleYes(event)">Yes, I'm 21 or Older</button>
+      <button class="btn-no" onclick="showScreen('screen-blocked')">No, I'm under 21</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: Offer -->
+<div class="screen hidden" id="screen-offer">
+  <div class="card">
+    <div class="logo">
+      <img src="https://i.imgur.com/d4rEH4U.png" alt="Freecash">
+    </div>
+    <div class="badge"><span class="pulse-dot"></span>Scroll the FYP Offer</div>
+    <h1 class="hero-h1-sm">FIND THE <span class="accent">SCROLL FYP</span> OFFER</h1>
+    <p class="subtitle">Sign up below and find the Scroll FYP offer inside the app.</p>
+    <div class="reminder-box">
+      <div class="reminder-label"><span class="pulse-amber"></span>Reminder</div>
+      <p class="reminder-text">Already have the app? You <strong>need a new account</strong> through this link with age set to <strong>21+</strong>.</p>
+    </div>
+    <a class="btn-signup" href="https://go.unlockbonusapp.com/click" rel="noopener noreferrer">
+      <svg class="cta-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+      </svg>
+      DOWNLOAD NOW
+    </a>
+    <p class="trust">Trusted by 50M+ users · Rated 4.7 on Trustpilot</p>
+    <p class="disclaimer">Not affiliated with TikTok. Must be 21+. Results may vary.</p>
+  </div>
+</div>
+
+<!-- SCREEN 3: Blocked -->
+<div class="screen hidden" id="screen-blocked">
+  <div class="card">
+    <div class="blocked-icon">
+      <svg viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h2 class="blocked-title">You Must Be 21+</h2>
+    <p class="blocked-sub">This offer is restricted to ages 21 and older.</p>
+    <button class="btn-back" onclick="showScreen('screen-age')">
+      <svg viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      Go Back
+    </button>
+  </div>
+</div>
+
+<script>
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    window.scrollTo({ top: 0 });
+  }
+
+  function handleYes(e) {
+    const btn = e.currentTarget;
+
+    // Spawn ripple at click position
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
+    btn.appendChild(ripple);
+    ripple.addEventListener('animationend', () => ripple.remove());
+
+    // Bounce animation, then navigate
+    btn.classList.remove('pressing');
+    void btn.offsetWidth; // reflow
+    btn.classList.add('pressing');
+    btn.addEventListener('animationend', () => {
+      btn.classList.remove('pressing');
+      showScreen('screen-offer');
+    }, { once: true });
+  }
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"026d1f61bbfb423a96f53124a981a0a5","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
